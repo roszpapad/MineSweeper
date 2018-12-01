@@ -40,8 +40,8 @@ namespace MineSweeper
         private void initMines()
         {
             Random random = new Random();
-
-            while (Mines > 0)
+            int minesRemaining = Mines;
+            while (minesRemaining > 0)
             {
                 
                 int randomRow = random.Next(Rows);
@@ -50,7 +50,7 @@ namespace MineSweeper
                 if (!fields[randomRow, randomCol].IsMine)
                 {
                     fields[randomRow, randomCol].IsMine = true;
-                    Mines--;
+                    minesRemaining--;
                 }
             }
         }
@@ -171,4 +171,6 @@ namespace MineSweeper
             return fields;
         }
     }
+
+
 }

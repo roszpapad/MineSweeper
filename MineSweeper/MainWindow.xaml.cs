@@ -35,13 +35,14 @@ namespace MineSweeper
         public MainWindow()
         {
             InitializeComponent();
-            Rows = 16;
-            Columns = 16;
-            Mines = 40;
+            Rows = 9;
+            Columns = 9;
+            Mines = 10;
             GAME_WIDTH = Columns * BOX_SIZE;
             GAME_HEIGHT = Rows * BOX_SIZE;
             table = new Table(Rows, Columns, Mines);
             seconds = 0;
+            remainingMines.Content = table.Mines;
 
             timer = new System.Windows.Forms.Timer();
             timer.Tick += new EventHandler(countSeconds);
@@ -87,6 +88,8 @@ namespace MineSweeper
                 {
                     Button button = buttons[i, j];
                     button.Click += hitButton;
+                    button.MouseRightButtonUp += rightClickButton;
+                    button.Background = Brushes.LightGray;                                      
                     Grid.SetRow(button, i);
                     Grid.SetColumn(button, j);
                     ButtonGrid.Children.Add(button);
@@ -172,5 +175,27 @@ namespace MineSweeper
             seconds++;
             scoreLabel.Content = seconds;
         }
+
+        public void rightClickButton(object sender, RoutedEventArgs e)
+        {
+            Button pressed = (Button)sender;
+            int index = ButtonGrid.Children.IndexOf(pressed);
+            int pressedRow = index / table.Columns;
+            int pressedCol = index % table.Columns;
+
+            if (!table.getFields()[pressedRow, pressedCol].IsFlaged)
+            {
+                buttons[pressedRow, pressedCol].Background = Brushes.Red;
+                remainingMines.Content = --table.Mines;
+                table.getFields()[pressedRow, pressedCol].IsFlaged = true;
+            }
+            else
+            {
+                buttons[pressedRow, pressedCol].Background = Brushes.LightGray;
+                remainingMines.Content = ++table.Mines;
+                table.getFields()[pressedRow, pressedCol].IsFlaged = false;
+            }
+        }
+
     }
 }

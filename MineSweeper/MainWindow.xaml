@@ -12,9 +12,11 @@
             <Label x:Name="scoreLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="31" Margin="680,65,0,0"/>
             <Label Content="Eltelt ido :" HorizontalAlignment="Left" Margin="610,65,0,0" VerticalAlignment="Top" Width="65" Height="31"/>
             <Label Content="Mine Sweeper" HorizontalAlignment="Left" Margin="302,34,0,0" VerticalAlignment="Top" Height="58" Width="162" FontSize="24"/>
+            <Label Content="Mines :" HorizontalAlignment="Left" Margin="31,65,0,0" VerticalAlignment="Top" Width="47"/>
+            <Label Name="remainingMines" HorizontalAlignment="Left" Margin="83,65,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.339,0.406"/>
         </Grid>
         <Grid x:Name="ButtonGrid" >
-            
+
         </Grid>
     </StackPanel>
 

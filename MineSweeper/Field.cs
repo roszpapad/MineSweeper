@@ -12,12 +12,14 @@ namespace MineSweeper
         public int Value { get; set; }
         public bool IsMine { get; set; }
         public bool IsRevealed { get; set; }
+        public bool IsFlaged { get; set; }
 
         public Field()
         {
             Value = 0;
             this.IsMine = false;
             this.IsRevealed = false;
+            this.IsFlaged = false;
         }
     }
 }
