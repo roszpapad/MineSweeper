@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,9 @@ namespace MineSweeper
     {
 
         private Field[,] fields;
-        int Mines { get; set; }
-        int Rows { get; set; }
-        int Columns { get; set; }
+        public int Mines { get; set; }
+        public int Rows { get; set; }
+        public int Columns { get; set; }
 
         public Table(int rows, int columns, int mines)
         {
@@ -20,8 +21,20 @@ namespace MineSweeper
             this.Rows = rows;
             this.Columns = columns;
             this.fields = new Field[rows, columns];
+            initFields();
             initMines();
             initValues();
+        }
+
+        private void initFields()
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    fields[i, j] = new Field();
+                }
+            }
         }
 
         private void initMines()
@@ -30,6 +43,7 @@ namespace MineSweeper
 
             while (Mines > 0)
             {
+                
                 int randomRow = random.Next(Rows);
                 int randomCol = random.Next(Columns);
 
@@ -116,8 +130,8 @@ namespace MineSweeper
                 if (j == Columns - 1)
                 {
                     fieldsToReturn.Add(fields[i - 1, j]);
-                    fieldsToReturn.Add(fields[i - 1, j + 1]);
-                    fieldsToReturn.Add(fields[i, j + 1]);
+                    fieldsToReturn.Add(fields[i - 1, j - 1]);
+                    fieldsToReturn.Add(fields[i, j - 1]);
                     return fieldsToReturn;
                 }
 
@@ -150,6 +164,11 @@ namespace MineSweeper
             }
 
             return fieldsToReturn;
+        }
+
+        public Field[,] getFields()
+        {
+            return fields;
         }
     }
 }

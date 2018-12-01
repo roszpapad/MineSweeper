@@ -26,43 +26,64 @@ namespace MineSweeper
         private int Columns { get; set; }
         private int Mines { get; set; }
         private Button[,] buttons;
+        private const int BOX_SIZE = 20;
+        private int GAME_WIDTH { get; set; }
+        private int GAME_HEIGHT { get; set; }
+        private static System.Windows.Forms.Timer timer;
+        private static int seconds;
 
         public MainWindow()
         {
             InitializeComponent();
-            //table = new Table(Rows, Columns, Mines);
+            Rows = 16;
+            Columns = 16;
+            Mines = 40;
+            GAME_WIDTH = Columns * BOX_SIZE;
+            GAME_HEIGHT = Rows * BOX_SIZE;
+            table = new Table(Rows, Columns, Mines);
+            seconds = 0;
+
+            timer = new System.Windows.Forms.Timer();
+            timer.Tick += new EventHandler(countSeconds);
+            timer.Interval = 1000;
+
             initGameField();
+            timer.Start();
+            
         }
 
         private void initGameField()
         {
             int i, j;
-            Rows = 9;
-            Columns = 9;
-            buttons = new Button[Rows, Columns];
-            for (i = 0; i < Rows; i++)
+            
+            buttons = new Button[table.Rows, table.Columns];
+            for (i = 0; i < table.Rows; i++)
             {
-                for (j = 0; j < Columns; j++)
+                for (j = 0; j < table.Columns; j++)
                 {
                     buttons[i, j] = new Button();
+                    buttons[i, j].Width = BOX_SIZE;
+                    buttons[i, j].Height = BOX_SIZE;
                 }
             }
 
-           
+            ButtonGrid.Width = GAME_WIDTH;
+            ButtonGrid.Height = GAME_HEIGHT;
 
-            for (i = 0; i < Rows; i++)
+          
+            for (i = 0; i < table.Rows; i++)
             {
                 ButtonGrid.RowDefinitions.Add(new RowDefinition());
             }
 
-            for (i = 0; i < Columns; i++)
+            for (i = 0; i < table.Columns; i++)
             {
                 ButtonGrid.ColumnDefinitions.Add(new ColumnDefinition());
             }
 
-            for (i = 0; i < Rows; i++)
+            for (i = 0; i < table.Rows; i++)
             {
-                for (j = 0; j < Columns; j++)
+                for (j = 0; j < table.Columns; j++)
                 {
                     Button button = buttons[i, j];
                     button.Click += hitButton;
@@ -75,7 +96,81 @@ namespace MineSweeper
 
         public void hitButton(object sender, RoutedEventArgs e)
         {
-            
+            Button pressed = (Button)sender;
+            int index = ButtonGrid.Children.IndexOf(pressed);
+            int pressedRow = index / table.Columns;
+            int pressedCol = index % table.Columns;
+            buttonClicked(pressedRow, pressedCol);
+        }
+
+        private void buttonClicked(int i, int j)
+        {
+            if (!table.getFields()[i, j].IsRevealed && table.getFields()[i, j].IsMine)
+            {
+                showMines();
+                timer.Stop();
+                MessageBox.Show("Game Over");
+            }
+
+            if (!table.getFields()[i, j].IsRevealed && !table.getFields()[i,j].IsMine)
+            {
+                table.getFields()[i, j].IsRevealed = true;
+                buttons[i, j].IsEnabled = false;
+                if (table.getFields()[i, j].Value == 0)
+                {
+                    buttons[i, j].Content = "";
+                }
+                else
+                {
+                    buttons[i, j].Content = table.getFields()[i, j].Value;
+                }
+                if (table.getFields()[i, j].Value == 0)
+                {
+                    if (i >= 0 && i < Rows - 1)
+                    {
+                        buttonClicked(i + 1, j);
+                        if (j >= 0 && j < Columns - 1)
+                            buttonClicked(i + 1, j + 1);
+                        
+                        if (j > 0 && j < Columns)
+                            buttonClicked(i + 1, j - 1);
+                    }
+
+                    if (i > 0 && i < Rows)
+                    {
+                        buttonClicked(i - 1, j);
+                        if (j > 0 && j < Columns)
+                            buttonClicked(i - 1, j - 1);
+
+                        if (j >= 0 && j < Columns - 1)
+                            buttonClicked(i - 1, j + 1);
+                    }
+
+                    if (j >= 0 && j < Columns - 1)
+                        buttonClicked(i, j + 1);
+
+                    if (j > 0 && j < Columns)
+                        buttonClicked(i, j - 1);
+                }
+            }
+        }
+
+        private void showMines()
+        {
+            for (int i = 0; i < table.Rows; i++)
+            {
+                for (int j = 0; j < table.Columns; j++)
+                {
+                    if (table.getFields()[i, j].IsMine)
+                        buttons[i, j].Background = Brushes.Black;
+                }
+            }
+        }
+
+        public void countSeconds(object sender, EventArgs e)
+        {
+            seconds++;
+            scoreLabel.Content = seconds;
         }
     }
 }

@@ -5,9 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MineSweeper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
-    <Grid Height="500" Width="700" Name="ButtonGrid">
-        <Grid.RowDefinitions></Grid.RowDefinitions>
-        <Grid.ColumnDefinitions></Grid.ColumnDefinitions>
-    </Grid>
+        Title="Mine Sweeper" Height="500" Width="780" Name="gameWindow">
+
+    <StackPanel Height="490" Width="760" VerticalAlignment="Bottom">
+        <Grid Height="150">
+            <Label x:Name="scoreLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="31" Margin="680,65,0,0"/>
+            <Label Content="Eltelt ido :" HorizontalAlignment="Left" Margin="610,65,0,0" VerticalAlignment="Top" Width="65" Height="31"/>
+            <Label Content="Mine Sweeper" HorizontalAlignment="Left" Margin="302,34,0,0" VerticalAlignment="Top" Height="58" Width="162" FontSize="24"/>
+        </Grid>
+        <Grid x:Name="ButtonGrid" >
+            
+        </Grid>
+    </StackPanel>
+
+
+
 </Window>
