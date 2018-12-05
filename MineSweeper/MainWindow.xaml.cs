@@ -23,13 +23,14 @@ namespace MineSweeper
     public partial class MainWindow : Window
     {
         private Table table;
+        private String Level { get; set; }
         private int Rows { get; set; }
         private int Columns { get; set; }
         private int Mines { get; set; }
         private Button[,] buttons;
         private const int BOX_SIZE = 20;
-        private int GAME_WIDTH { get; set; }
-        private int GAME_HEIGHT { get; set; }
+        private int GameWidth { get; set; }
+        private int GameHeight { get; set; }
         private static System.Windows.Forms.Timer timer;
         private static int seconds;
 
@@ -38,7 +39,7 @@ namespace MineSweeper
             InitializeComponent();
             initStartingValues();
             initComponents();
-
+            
             initGameField();
             timer.Start();
             
@@ -46,6 +47,7 @@ namespace MineSweeper
 
         private void initStartingValues()
         {
+            Level = "Beginner";
             Rows = 9;
             Columns = 9;
             Mines = 10;
@@ -53,9 +55,10 @@ namespace MineSweeper
 
         private void initGameField()
         {
+            ButtonGrid.Children.Clear();
             ButtonGrid.RowDefinitions.Clear();
             ButtonGrid.ColumnDefinitions.Clear();
-
+  
             int i, j;
             
             buttons = new Button[table.Rows, table.Columns];
@@ -69,8 +72,8 @@ namespace MineSweeper
                 }
             }
 
-            ButtonGrid.Width = GAME_WIDTH;
-            ButtonGrid.Height = GAME_HEIGHT;
+            ButtonGrid.Width = GameWidth;
+            ButtonGrid.Height = GameHeight;
 
           
             for (i = 0; i < table.Rows; i++)
@@ -100,8 +103,8 @@ namespace MineSweeper
 
         private void initComponents()
         {   
-            GAME_WIDTH = Columns * BOX_SIZE;
-            GAME_HEIGHT = Rows * BOX_SIZE;
+            GameWidth = Columns * BOX_SIZE;
+            GameHeight = Rows * BOX_SIZE;
             table = new Table(Rows, Columns, Mines);
             seconds = 0;
             remainingMines.Content = table.Mines;
@@ -111,10 +114,45 @@ namespace MineSweeper
             timer.Interval = 1000;
         }
 
-        public void setDifficulty(object sender, RoutedEventArgs e)
+        private void resetField(object sender, RoutedEventArgs e)
+        {
+            table = new Table(Rows, Columns, Mines);
+            for (int i = 0; i < table.Rows; i++)
+            {
+                for (int j = 0; j < table.Columns; j++)
+                {
+                    buttons[i, j].IsEnabled = true;
+                    buttons[i, j].Content = "";
+                    buttons[i, j].Background = Brushes.LightGray;
+                }
+            }
+        }
+
+        private void changeDifficulty(object sender, RoutedEventArgs e)
         {
             MenuItem difficulty = (MenuItem)sender;
+            setDifficulty(difficulty.Header.ToString());
+            initComponents();
+            initGameField();
+        }
+
+        public void setDifficulty(string difficulty)
+        {
             StreamReader st = new StreamReader("difficulties.txt");
+            string line;
+      
+            while((line = st.ReadLine()) != null)
+            {
+                string[] lineParts = line.Split(' ');
+                if (lineParts[0].Equals(difficulty))
+                {
+                    Level = lineParts[0];
+                    Rows = Int32.Parse(lineParts[1]);
+                    Columns = Int32.Parse(lineParts[2]);
+                    Mines = Int32.Parse(lineParts[3]);
+                    break;
+                }
+            }
         }
 
         public void hitButton(object sender, RoutedEventArgs e)
@@ -126,7 +164,10 @@ namespace MineSweeper
             buttonClicked(pressedRow, pressedCol);
             if (checkEverythingRevealedWin())
             {
-                MessageBox.Show("Revealed win");
+                timer.Stop();
+                Score window = new Score(seconds,Level);
+                window.Show();
+                this.Close();
             }
         }
 
@@ -194,6 +235,18 @@ namespace MineSweeper
             }
         }
 
+        private void hideMines()
+        {
+            for (int i = 0; i < table.Rows; i++)
+            {
+                for (int j = 0; j < table.Columns; j++)
+                {
+                    if (table.getFields()[i, j].IsMine)
+                        buttons[i, j].Background = Brushes.LightGray;
+                }
+            }
+        }
+
         public void countSeconds(object sender, EventArgs e)
         {
             seconds++;
@@ -222,7 +275,10 @@ namespace MineSweeper
 
             if (checkFlaggedWin())
             {
-                MessageBox.Show("Flagged win");
+                timer.Stop();
+                Score window = new Score(seconds, Level);
+                window.Show();
+                this.Close();
             }
 
         }
