@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,26 +36,26 @@ namespace MineSweeper
         public MainWindow()
         {
             InitializeComponent();
-            Rows = 9;
-            Columns = 9;
-            Mines = 10;
-            GAME_WIDTH = Columns * BOX_SIZE;
-            GAME_HEIGHT = Rows * BOX_SIZE;
-            table = new Table(Rows, Columns, Mines);
-            seconds = 0;
-            remainingMines.Content = table.Mines;
-
-            timer = new System.Windows.Forms.Timer();
-            timer.Tick += new EventHandler(countSeconds);
-            timer.Interval = 1000;
+            initStartingValues();
+            initComponents();
 
             initGameField();
             timer.Start();
             
         }
 
+        private void initStartingValues()
+        {
+            Rows = 9;
+            Columns = 9;
+            Mines = 10;
+        }
+
         private void initGameField()
         {
+            ButtonGrid.RowDefinitions.Clear();
+            ButtonGrid.ColumnDefinitions.Clear();
+
             int i, j;
             
             buttons = new Button[table.Rows, table.Columns];
@@ -97,6 +98,25 @@ namespace MineSweeper
             }
         }
 
+        private void initComponents()
+        {   
+            GAME_WIDTH = Columns * BOX_SIZE;
+            GAME_HEIGHT = Rows * BOX_SIZE;
+            table = new Table(Rows, Columns, Mines);
+            seconds = 0;
+            remainingMines.Content = table.Mines;
+
+            timer = new System.Windows.Forms.Timer();
+            timer.Tick += new EventHandler(countSeconds);
+            timer.Interval = 1000;
+        }
+
+        public void setDifficulty(object sender, RoutedEventArgs e)
+        {
+            MenuItem difficulty = (MenuItem)sender;
+            StreamReader st = new StreamReader("difficulties.txt");
+        }
+
         public void hitButton(object sender, RoutedEventArgs e)
         {
             Button pressed = (Button)sender;
@@ -104,6 +124,10 @@ namespace MineSweeper
             int pressedRow = index / table.Columns;
             int pressedCol = index % table.Columns;
             buttonClicked(pressedRow, pressedCol);
+            if (checkEverythingRevealedWin())
+            {
+                MessageBox.Show("Revealed win");
+            }
         }
 
         private void buttonClicked(int i, int j)
@@ -195,6 +219,47 @@ namespace MineSweeper
                 remainingMines.Content = ++table.Mines;
                 table.getFields()[pressedRow, pressedCol].IsFlaged = false;
             }
+
+            if (checkFlaggedWin())
+            {
+                MessageBox.Show("Flagged win");
+            }
+
+        }
+
+        private bool checkFlaggedWin()
+        {
+
+            if (table.Mines == 0)
+            {
+                for (int i = 0; i < table.Rows; i++)
+                {
+                    for (int j = 0; j < table.Columns; j++)
+                    {
+                        if (!table.getFields()[i, j].IsFlaged && table.getFields()[i, j].IsMine)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private bool checkEverythingRevealedWin()
+        {
+            for (int i = 0; i < table.Rows; i++)
+            {
+                for (int j = 0; j < table.Columns; j++)
+                {
+                    if (!table.getFields()[i, j].IsRevealed && !table.getFields()[i, j].IsMine)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
     }

@@ -7,17 +7,28 @@
         mc:Ignorable="d"
         Title="Mine Sweeper" Height="500" Width="780" Name="gameWindow">
 
+
     <StackPanel Height="490" Width="760" VerticalAlignment="Bottom">
         <Grid Height="150">
-            <Label x:Name="scoreLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="31" Margin="680,65,0,0"/>
-            <Label Content="Eltelt ido :" HorizontalAlignment="Left" Margin="610,65,0,0" VerticalAlignment="Top" Width="65" Height="31"/>
-            <Label Content="Mine Sweeper" HorizontalAlignment="Left" Margin="302,34,0,0" VerticalAlignment="Top" Height="58" Width="162" FontSize="24"/>
-            <Label Content="Mines :" HorizontalAlignment="Left" Margin="31,65,0,0" VerticalAlignment="Top" Width="47"/>
-            <Label Name="remainingMines" HorizontalAlignment="Left" Margin="83,65,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.339,0.406"/>
+            <Label x:Name="scoreLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="31" Margin="677,106,0,0" RenderTransformOrigin="0.379,2.114"/>
+            <Label Content="Eltelt ido :" HorizontalAlignment="Left" Margin="612,106,0,0" VerticalAlignment="Top" Width="65" Height="31"/>
+            <Label Content="Mine Sweeper" HorizontalAlignment="Left" Margin="302,52,0,0" VerticalAlignment="Top" Height="58" Width="162" FontSize="24"/>
+            <Label Content="Mines :" HorizontalAlignment="Left" Margin="39,106,0,0" VerticalAlignment="Top" Width="47" RenderTransformOrigin="0.486,1.088"/>
+            <Label x:Name="remainingMines" HorizontalAlignment="Left" Margin="91,106,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.339,0.406"/>
+            <Menu VerticalAlignment="Top" Margin="0,34,0,0">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+                <MenuItem Header="_Game">
+                    <MenuItem Header="_Beginner" />
+                    <MenuItem Header="_Medium" />
+                    <MenuItem Header="_Hard" />
+                </MenuItem>
+            </Menu>
         </Grid>
-        <Grid x:Name="ButtonGrid" >
-
-        </Grid>
+        <Grid x:Name="ButtonGrid" />
     </StackPanel>
 
 
