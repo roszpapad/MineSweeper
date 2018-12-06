@@ -41,8 +41,7 @@ namespace MineSweeper
             initComponents();
             
             initGameField();
-            timer.Start();
-            
+                       
         }
 
         private void initStartingValues()
@@ -99,6 +98,8 @@ namespace MineSweeper
                     ButtonGrid.Children.Add(button);
                 }
             }
+
+            timer.Start();
         }
 
         private void initComponents()
@@ -126,10 +127,14 @@ namespace MineSweeper
                     buttons[i, j].Background = Brushes.LightGray;
                 }
             }
+            timer.Stop();
+            seconds = 0;
+            timer.Start();
         }
 
         private void changeDifficulty(object sender, RoutedEventArgs e)
         {
+            timer.Stop();
             MenuItem difficulty = (MenuItem)sender;
             setDifficulty(difficulty.Header.ToString());
             initComponents();
@@ -177,7 +182,10 @@ namespace MineSweeper
             {
                 showMines();
                 timer.Stop();
-                MessageBox.Show("Game Over");
+                MessageBox.Show("Sajnos ez nem sikerült. Az időd : " + seconds,"Játék vége",MessageBoxButton.OK);
+                initComponents();
+                initGameField();
+                return;
             }
 
             if (!table.getFields()[i, j].IsRevealed && !table.getFields()[i,j].IsMine)
@@ -318,5 +326,9 @@ namespace MineSweeper
             return true;
         }
 
+        private void exitGame(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace MineSweeper
             playerScore = new PlayerScore(score);
             this.difficulty = difficulty;
             topLabel.Content = topLabel.Content + difficulty;
+            backButton.IsEnabled = false;
         }
 
         private void saveScore(object sender, RoutedEventArgs e)
@@ -48,6 +49,7 @@ namespace MineSweeper
             }
             scores.Add(playerScore);
             showAndSaveScore(scores);
+            backButton.IsEnabled = true;
         }
 
         private void showAndSaveScore(List<PlayerScore> scores)
