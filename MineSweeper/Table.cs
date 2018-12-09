@@ -170,7 +170,26 @@ namespace MineSweeper
         {
             return fields;
         }
-    }
 
+        public void changeMine(int i, int j)
+        {
+            List<Field> surroundingFields = getSurroundingFields(i, j);
+            fields[i, j].IsMine = false;
+            surroundingFields.ForEach(field => field.Value--);
+            for (int k = 0; k < Rows; k++)
+            {
+                for (int l = 0; l < Columns; l++)
+                {
+                    if (!fields[k, l].IsMine && (i != k || j != l))
+                    {
+                        fields[k, l].IsMine = true;
+                        surroundingFields = getSurroundingFields(k, l);
+                        surroundingFields.ForEach(field => field.Value++);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
 }

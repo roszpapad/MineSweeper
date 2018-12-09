@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MineSweeper"
         mc:Ignorable="d"
-        Title="Mine Sweeper" Height="500" Width="780" Name="gameWindow">
+        Title="Mine Sweeper" Height="500" Width="780" Name="gameWindow" KeyDown="gameWindow_KeyDown">
 
 
     <StackPanel Height="490" Width="760" VerticalAlignment="Bottom">

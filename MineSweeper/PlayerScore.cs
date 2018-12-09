@@ -19,7 +19,9 @@ namespace MineSweeper
 
         public override string ToString()
         {
-            return $"{Name,-50}" + Score;
+            int length = 40 - Name.Length;
+            //return string.Format("{0, -" + length + "}{1}", Name, Score);
+            return Name.PadRight(length) + Score;
         }
     }
 }

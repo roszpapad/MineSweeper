@@ -33,6 +33,7 @@ namespace MineSweeper
         private int GameHeight { get; set; }
         private static System.Windows.Forms.Timer timer;
         private static int seconds;
+        private bool isFirstClick;
 
         public MainWindow()
         {
@@ -109,7 +110,7 @@ namespace MineSweeper
             table = new Table(Rows, Columns, Mines);
             seconds = 0;
             remainingMines.Content = table.Mines;
-
+            isFirstClick = true;
             timer = new System.Windows.Forms.Timer();
             timer.Tick += new EventHandler(countSeconds);
             timer.Interval = 1000;
@@ -130,6 +131,7 @@ namespace MineSweeper
             timer.Stop();
             seconds = 0;
             timer.Start();
+            isFirstClick = true;
         }
 
         private void changeDifficulty(object sender, RoutedEventArgs e)
@@ -178,6 +180,16 @@ namespace MineSweeper
 
         private void buttonClicked(int i, int j)
         {
+
+            if (isFirstClick)
+            {
+                if (table.getFields()[i, j].IsMine)
+                {
+                    table.changeMine(i, j);
+                }
+                isFirstClick = false;
+            }
+
             if (!table.getFields()[i, j].IsRevealed && table.getFields()[i, j].IsMine)
             {
                 showMines();
@@ -329,6 +341,19 @@ namespace MineSweeper
         private void exitGame(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void gameWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S)
+            {
+                showMines();
+            }
+
+            if (e.Key == Key.H)
+            {
+                hideMines();
+            }
         }
     }
 }
